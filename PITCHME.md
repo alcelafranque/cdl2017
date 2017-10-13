@@ -42,7 +42,7 @@
 [defaults]
 inventory      = ./hosts
 ```
-* inventaire hosts
+inventaire hosts
 ```
 virt-python1 ansible_host=localhost ansible_user=python1 ansible_password=python1
 virt-python2 ansible_host=localhost ansible_user=python2 ansible_password=python2
