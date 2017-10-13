@@ -35,3 +35,21 @@
       foo2: tabac
 ```
 
+---
+@title[Hello-wordl-1/3]
+# Hello, World ! 1/3
+```
+[defaults]
+inventory      = ./hosts
+```
+* inventaire hosts
+```
+virt-python1 ansible_host=localhost ansible_user=python1 ansible_password=python1
+virt-python2 ansible_host=localhost ansible_user=python2 ansible_password=python2
+```
+
+
+
+
+
+
