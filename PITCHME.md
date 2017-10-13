@@ -16,3 +16,13 @@
 #### Préparation
 * Ajouter le dépot ansible 
 * Copier la clé publique sur la machine gérée 
+
+---
+@title[YAML]
+#### YAML QÉSACO ?
+* Equivalent de JSON/XML en moins verbeux.
+* Sensible à l'indentation 
+* Permet de modeliser de scalaires, tableaux et dictionnaires
+
+
+
