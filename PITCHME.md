@@ -10,7 +10,7 @@
 #### Machine gérée :
 * Machine debian 8/9 ou Ubuntu ⩾ 14.04
 * Accés SSH en root
-* Au moins python 2.4 sur la VM \o/
+* Au moins python 2.6 sur la VM \o/
 ---
 @title[Préparation]
 #### Préparation
