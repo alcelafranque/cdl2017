@@ -44,8 +44,8 @@ inventory      = ./hosts
 ```
 inventaire hosts
 ```
-virt-python1 ansible_host=localhost ansible_user=python1 ansible_password=python1
-virt-python2 ansible_host=localhost ansible_user=python2 ansible_password=python2
+serveurweb1 ansible_host=ipmachine1 ansible_user=root 
+serveurweb2 ansible_host=ipmachine2 ansible_user=root
 ```
 
 
