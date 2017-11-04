@@ -57,12 +57,13 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 # Hello, World ! 2/3
 ```yaml
    ---
-   - hosts: virt-python1
-     tasks:
-   - name: creation d'un fichier "hello-world.txt"
-       file:
-       path: /home/python1/hello-world.txt
-       state: touch
+       - hosts: virt-python1
+      tasks:
+        - name: creation d'un fichier "hello-world.txt"
+          file:
+            path: /home/python1/hello-world.txt
+            state: touch
+
 ```
 ---
 
