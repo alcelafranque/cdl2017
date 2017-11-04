@@ -6,18 +6,20 @@
 * Accès SSH en root
 * Avoir une clé SSH
 
-
 #### Machine gérée :
 * Machine debian 8/9 ou Ubuntu ⩾ 14.04
 * Accés SSH en root
 * Au moins python 2.6 sur la VM \o/
 ---
+
+
 @title[Préparation]
 # Préparation
 * Ajouter le dépot ansible 
 * Copier la clé publique sur la machine gérée 
-
 ---
+
+
 @title[YAML]
 # YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
@@ -34,8 +36,9 @@
       foo1: bar
       foo2: tabac
 ```
-
 ---
+
+
 @title[Hello-wordl-1/3]
 # Hello, World ! 1/3
 ```
@@ -47,9 +50,8 @@ inventaire hosts
 serveurweb1 ansible_host=ipmachine1 ansible_user=root 
 serveurweb2 ansible_host=ipmachine2 ansible_user=root
 ```
-
-
 ---
+
 @title[Hello-wordl-2/3]
 # Hello, World ! 2/3
 ```yaml
@@ -61,8 +63,6 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
             path: /home/python1/hello-world.txt
             state: touch
 ```
-
-
 ---
 @title[Hello-wordl-3/3]
 # hello, world ! 3/3
@@ -87,7 +87,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 ---
 @title[playboookactionbase]
-#Un petit playbook pour voir quelques actions de base.
+# Un petit playbook pour voir quelques actions de base.
 
 
 ```yaml
