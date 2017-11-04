@@ -18,14 +18,15 @@
 * Ajouter le dépot Ansible
 * Copier la clé SSH publique sur la machine gérée 
 ---
-
-
 @title[YAML]
 ## YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
 * Permet de modeliser de scalaires, tableaux et dictionnaires
-
+---
+@title[YAML]
+## YAML QÉSACO ?
+<br>
 ```yaml
 ---
 variable: bar   
