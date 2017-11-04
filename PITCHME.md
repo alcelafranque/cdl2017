@@ -357,7 +357,7 @@ http://docs.ansible.com/ansible/latest/index.html
 
 ---
 @title[Aller plus loin]
-# Aller plus loin 1/2
+# Aller plus loin 2/2
 ## Possibilités
 
 * structures de contrôle dans les rôles
