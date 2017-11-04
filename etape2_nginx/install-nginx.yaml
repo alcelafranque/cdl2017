@@ -19,3 +19,13 @@
         command: ln -s /etc/nginx/site-avaible/cdl2017.conf /etc/nginx/site-enable/cdl2017.conf  
         args:
           creates: /etc/nginx/site-enable/cdl2017.conf
+
+      - name: création de l'utilisateur cdl2017
+        user: 
+          name: cdl2017
+          
+
+      - name: création du dossier public sur l'utilisateur 
+        file: 
+          path: /home/cdl2017/public
+          state: directory
