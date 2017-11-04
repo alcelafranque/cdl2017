@@ -25,16 +25,16 @@
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
 * Permet de modeliser de scalaires, tableaux et dictionnaires
-```
-    ---
-    variable: bar   
-    tableau:
-      - foo1
-      - foo2
-      - bar
-    dictionnaire:
-      foo1: bar
-      foo2: tabac
+```yaml
+  ---
+  variable: bar   
+  tableau:
+    - foo1
+    - foo2
+    - bar
+  dictionnaire:
+    foo1: bar
+    foo2: tabac
 ```
 ---
 
@@ -56,7 +56,7 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 @title[Hello-wordl-2/3]
 # Hello, World ! 2/3
 ```yaml
-  
+  ---
     - hosts: virt-python1
       tasks:
       - name: creation d'un fichier "hello-world.txt"
