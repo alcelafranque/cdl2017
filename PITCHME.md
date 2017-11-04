@@ -87,7 +87,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 ---
 @title[Exemple : Django 1/3]
-Un petit playbook pour voir quelques actions de base.
+#Un petit playbook pour voir quelques actions de base.
 
 
 ```yaml
