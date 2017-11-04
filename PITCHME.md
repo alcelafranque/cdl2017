@@ -25,7 +25,7 @@
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
 * Permet de modeliser de scalaires, tableaux et dictionnaires
-``` yaml
+```
     ---
     variable: bar   
     tableau:
