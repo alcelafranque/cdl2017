@@ -27,8 +27,7 @@
 @title[YAML]
 ## YAML QÉSACO ?
 
-
-```
+```yaml
 ---
 variable: bar   
 tableau:
