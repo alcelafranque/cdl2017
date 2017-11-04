@@ -47,14 +47,13 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 Fichier hello-world.yaml
 
 ```yaml
-  ---
-    - hosts: serveurweb1
-      tasks:
-      - name: creation d'un fichier "hello-world.txt"
-        file:
-          path: /root/hello-world.txt
-          state: touch
-
+---
+- hosts: serveurweb1
+  tasks:
+  - name: creation d'un fichier "hello-world.txt"
+    file:
+     path: /root/hello-world.txt
+     state: touch
 ```
 ---
 
@@ -129,16 +128,18 @@ Un petit playbook pour voir quelques actions de base.
 
 **il faut que le playbook aie le même comportement qu'il soit joué une ou plusieurs fois**
 
-* Par exemple :
- * on ne recréée pas les dossiers
- * on ne ré-installe pas un package.
-* Pourquoi ?
- * installer une machine en rejouant le playbook de son groupe
- * patches : appliquer tout le playbook pour corriger toutes les machines (on ne crée un playbook de patch)
-* Comment ?
- * La plupart des modules sont idempotents
- * Sauf command / shell / script / raw : ajouter un argument `creates:`
- * on peut rendre les tâches conditionnelles avec `when:`
+Par exemple :
+* on ne recréée pas les dossiers
+* on ne ré-installe pas un package.
+
+Pourquoi ?
+* installer une machine en rejouant le playbook de son groupe
+* patches : appliquer tout le playbook pour corriger toutes les machines (on ne crée un playbook de patch)
+
+Comment ?
+* La plupart des modules sont idempotents
+* Sauf command / shell / script / raw : ajouter un argument `creates:`
+* on peut rendre les tâches conditionnelles avec `when:`
 
 
 ---
