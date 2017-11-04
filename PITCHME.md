@@ -12,15 +12,10 @@
 * Au moins python 2.6 sur la VM \o/
 ---
 
-
-@title[Préparation]
 ## Préparation
 * Ajouter le dépot Ansible
 * Copier la clé SSH publique sur la machine gérée 
 ---
-
-
-@title[YAML]
 ## YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
@@ -37,10 +32,7 @@
     foo2: tabac
 ```
 ---
-
-
-@title[Hello-wordl-1/3]
-# Hello, World ! 1/3
+## Hello, World ! 1/3
 Fichier de configuration : ansible.cfg
 ```
 [defaults]
@@ -51,10 +43,8 @@ Fichier d'inventaire : hosts
 serveurweb1 ansible_host=ipmachine1 ansible_user=root 
 serveurweb2 ansible_host=ipmachine2 ansible_user=root
 ```
----
+Fichier hello-world.yaml
 
-@title[Hello-wordl-2/3]
-# Hello, World ! 2/3
 ```yaml
   ---
     - hosts: virt-python1
@@ -66,9 +56,6 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 
 ```
 ---
-
-@title[Hello-wordl-3/3]
-# hello, world ! 3/3
 
 * exécution:
 
@@ -90,9 +77,9 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 ---
 
 
-@title[playboookactionbase]
-# Un petit playbook pour voir quelques actions de base.
+## Playbook Nginx
 
+Un petit playbook pour voir quelques actions de base.
 
 ```yaml
 ---
@@ -110,13 +97,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
     args:
       chdir: /home/python1/django-test
       creates: /home/python1/django-test/www/
-```
 
----
-@title[Exemple : Django 2/3]
-# Exemple : Django 2/3
-
-```yaml
   - name: creer le dossier utilisateur de systemd
     file:
       state: directory
@@ -131,13 +112,6 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
       dest: /home/python1/.config/systemd/user/
     notify: execution du serveur debug de django
 
-```
----
-@title[Exemple : Django 3/3]
-
-# Exemple : Django 3/3
-
-```yaml
   handlers:
   - name: execution du serveur debug de django
     systemd:
@@ -150,10 +124,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 ```
 ---
 
-
-@title[ [PIPO] idempotence]
-
-# [PIPO] idempotence
+## [PIPO] idempotence
 
 **il faut que le playbook aie le même comportement qu'il soit joué une ou plusieurs fois**
 
@@ -170,9 +141,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 
 ---
-
-@title[Rôle 1/2]
-# Rôle 1/2
+## Rôle
 Les rôles permettent de découper un playbook en morceaux réutilisables.
 
 Voici une arborescence basique:
@@ -193,11 +162,7 @@ On découpe les sections du playbook:
 * les tâches *handlers* dans *django/handlers/main.yml*
 * les fichiers dans le dossier *django/files*,
 * dans *tasks/main.yml*, on le référence par *files/xxx*, ansible résoud le dossier relatif par rapport au chemin du rôle
----
 
-
-@title[Rôle 2/2]
-# Rôle 2/2
 On a un nouveau fichier de playbook django-roles.yaml
 
 ```
@@ -207,18 +172,18 @@ On a un nouveau fichier de playbook django-roles.yaml
     - django
 ```
 ---
+## Templates de fichiers
 
-
-@title[Templates 1/4]
-# Templates 1/4
-## Ansible permet d'utiliser des templates jinja2 à la syntax similaire à celle de django :
+Ansible permet d'utiliser des templates jinja2 :
 
 * Créer un dossier *roles/django/templates* 
 * Copier depuis la cible *django-test/www/settings.py* en tant que *roles/django/templates/settings.py.j2* 
 * Editer ce fichier et remplacer ALLOWED\_HOSTS par :
+
 ```yaml
 ALLOWED_HOSTS = ["{{ansible_hostname}}"]
 ```
+
 * Ajouter cette tâche à votre role :
 ```yaml
 - name: correction des settings
@@ -228,12 +193,8 @@ ALLOWED_HOSTS = ["{{ansible_hostname}}"]
   notify: execution du serveur debug de django
 ```
 * relancer le playbook, mais cette fois avec l'option *--diff*
----
 
-
-@title[Templates 2/4]
-# Template 2/4
-## *ansible_hostname* est un fact (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
+*ansible_hostname* est un *fact* (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
 
 On peut afficher la liste des facts en appelant le module *setup* :
 ```
@@ -259,11 +220,6 @@ virt-python1 | SUCCESS => {
 [...]
 ```
 Plus puissant, on peut utiliser les facts déjà moissonnés sur les autres clients, ils sont accessibles dans le dictionnaire *hostvars["clientx"]*
----
-
-
-@title[Templates 3/4]
-# Templates 3/4
 
 Utilisation :
 
@@ -281,8 +237,7 @@ Ca marche aussi dans les tâches
 ---
 
 
-@title[Templates 4/4]
-# Templates 4/4
+## Templates de playbook
 Dans *roles/django/tasks/main.yml*, mettre des guillemets dans toutes les chaînes qui contiennent *python1*: 
 ```
 virtualenv: "/home/python1/django-test/"
@@ -304,7 +259,7 @@ Pour étendre le parc machines sur lequel on applique le playbook, editez-le et 
 
 
 @title[Inventaire]
-# Inventaire
+## Inventaire
 
 Le fichier *hosts* qui ressemble à un fichier "ini".
 On peut créer des groupes (une machine peut appartenir à plusieurs groupes).
@@ -320,9 +275,7 @@ virt-python[1:9]
 virt-python2
 
 ```
----
-@title[Gestion des variables]
-## Gestion des variables (1/2)
+#### Gestion des variables (1/2)
 On peut mettre des variables (utilisés dans les templates comme des facts) dans l'inventaire mais c'est limité.
 
 On peut creer deux dossiers *host_vars* et *group_vars*
@@ -336,10 +289,6 @@ host_vars/
 group_vars/
 └── webserver.yaml
 ```
----
-@title[Gestion des variables]
-## Gestion des variables (2/2)
-
 On peut donc stocker des tableaux, dictionnaires...
 
 On peut aussi stocker des variables dans les rôles (valeurs par défaut) 
@@ -350,18 +299,15 @@ http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precede
 
 ---
 @title[Aller plus loin]
-# Aller plus loin 1/2
-## Où trouver des infos
+## Aller plus loin 1/2
+#### Où trouver des infos
 http://docs.ansible.com/ansible/latest/index.html
 
 * filtres des templates jinja2 ... mais aussi ansible
 * documenations des modules
 * Ansible Galaxy
 
----
-@title[Aller plus loin]
-# Aller plus loin 2/2
-## Possibilités
+#### Possibilités
 
 * structures de contrôle dans les rôles
 * enregistrer le résutlat des tâches dans des variables
@@ -370,8 +316,7 @@ http://docs.ansible.com/ansible/latest/index.html
 * inventaires dynamiques (scripts qui listent les machines et leurs variables en json/yaml)
 * création de modules
 
----
-@title[The END]
+# The END
 
 Sébastien DA ROCHA
 
