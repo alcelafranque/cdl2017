@@ -32,7 +32,7 @@
     foo2: tabac
 ```
 ---
-## Hello, World ! 1/3
+## Hello, World !
 Fichier de configuration : ansible.cfg
 ```
 [defaults]
@@ -256,9 +256,6 @@ Pour vérifier que tout fonctionne encore, lancer le playbook avec l'option *--c
 Pour étendre le parc machines sur lequel on applique le playbook, editez-le et remplacez le contenu de *hosts* par *all* puis relancer-le.
 
 ---
-
-
-@title[Inventaire]
 ## Inventaire
 
 Le fichier *hosts* qui ressemble à un fichier "ini".
@@ -275,7 +272,7 @@ virt-python[1:9]
 virt-python2
 
 ```
-#### Gestion des variables (1/2)
+#### Gestion des variables
 On peut mettre des variables (utilisés dans les templates comme des facts) dans l'inventaire mais c'est limité.
 
 On peut creer deux dossiers *host_vars* et *group_vars*
@@ -298,8 +295,7 @@ On peut surcharger les variables, attention à l'ordre de surcharge :
 http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
 ---
-@title[Aller plus loin]
-## Aller plus loin 1/2
+## Aller plus loin
 #### Où trouver des infos
 http://docs.ansible.com/ansible/latest/index.html
 
@@ -316,7 +312,7 @@ http://docs.ansible.com/ansible/latest/index.html
 * inventaires dynamiques (scripts qui listent les machines et leurs variables en json/yaml)
 * création de modules
 
-# The END
+## The END
 
 Sébastien DA ROCHA
 
