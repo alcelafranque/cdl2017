@@ -1,20 +1,21 @@
 ## Pré-requis pour l'atelier
 #### Contrôleur
 
-* Machine debian 8/9 
-* Python récent
+* Machine Debian 8/9 
+* Python 2.6/2.7 ou 3.5+
 * Accès SSH en root
 * Avoir une clé SSH
 
 #### Machine gérée :
 * Machine Debian 8/9 ou Ubuntu ⩾ 14.04
 * Accés SSH en root
-* Au moins python 2.6 sur la VM \o/
----
+* Au moins Python 2.6 sur la VM \o/
 
+---
 ## Préparation
-* Ajouter le dépot Ansible
-* Copier la clé SSH publique sur la machine gérée 
+* Ajouter le dépot Ansible puis l'installer (c.f.: http://docs.ansible.com/ansible/latest/intro_installation.html#latest-releases-via-apt-ubuntu)
+* Copier votre clé SSH publique sur la machine gérée 
+
 ---
 ## YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
@@ -47,11 +48,11 @@ Fichier hello-world.yaml
 
 ```yaml
   ---
-    - hosts: virt-python1
+    - hosts: serveurweb1
       tasks:
       - name: creation d'un fichier "hello-world.txt"
         file:
-          path: /home/python1/hello-world.txt
+          path: /root/hello-world.txt
           state: touch
 
 ```
@@ -63,16 +64,16 @@ Fichier hello-world.yaml
 ```
 $ ansible-playbook hello-world.yaml 
 
-PLAY [virt-python1] *************************************************************
+PLAY [serveurweb1] *************************************************************
 
 TASK [Gathering Facts] **********************************************************
-ok: [virt-python1]
+ok: [serveurweb1]
 
 TASK [creation d'un fichier "hello-world.txt"] **********************************
-changed: [virt-python1]
+changed: [serveurweb1]
 
 PLAY RECAP **********************************************************************
-virt-python1                    : ok=2    changed=1    unreachable=0    failed=0   
+serveurweb1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
 ---
 
@@ -83,7 +84,7 @@ Un petit playbook pour voir quelques actions de base.
 
 ```yaml
 ---
-- hosts: virt-python1
+- hosts: serveurweb1
   tasks:
   - name: installation de django
     pip:
@@ -167,9 +168,9 @@ On a un nouveau fichier de playbook django-roles.yaml
 
 ```
 ---
-- hosts: virt-python1
+- hosts: serveurweb1
   roles:
-    - django
+    - nginx
 ```
 ---
 ## Templates de fichiers
@@ -199,7 +200,7 @@ ALLOWED_HOSTS = ["{{ansible_hostname}}"]
 On peut afficher la liste des facts en appelant le module *setup* :
 ```
 $ ansible hote -m setup | less
-virt-python1 | SUCCESS => {
+serveurweb1 | SUCCESS => {
     "ansible_facts": {
         "ansible_all_ipv4_addresses": [
             "192.168.y.x",
@@ -209,14 +210,14 @@ virt-python1 | SUCCESS => {
         "ansible_distribution_release": "xenial", 
         "ansible_distribution_version": "16.04", 
         "ansible_env": {
-            "HOME": "/home/python1", 
+            "HOME": "/root", 
             "LANG": "fr_FR.UTF-8", 
-            "PWD": "/home/python1", 
+            "PWD": "/root", 
             "SHELL": "/bin/bash", 
-            "USER": "python1", 
+            "USER": "root", 
         }, 
-        "ansible_hostname": "barbie", 
-		"ansible_user_dir": "/home/python1", 
+        "ansible_hostname": "serveurweb1", 
+		"ansible_user_dir": "/root", 
 [...]
 ```
 Plus puissant, on peut utiliser les facts déjà moissonnés sur les autres clients, ils sont accessibles dans le dictionnaire *hostvars["clientx"]*
@@ -231,12 +232,11 @@ Utilisation :
             youpi
 {% endif %}
 ```
-* Commentaires: `{# il était un petit navire #}` 
+* Commentaires: `{# il était un petit navire #}`
 
 Ca marche aussi dans les tâches
+
 ---
-
-
 ## Templates de playbook
 Dans *roles/django/tasks/main.yml*, mettre des guillemets dans toutes les chaînes qui contiennent *python1*: 
 ```
@@ -262,14 +262,14 @@ Le fichier *hosts* qui ressemble à un fichier "ini".
 On peut créer des groupes (une machine peut appartenir à plusieurs groupes).
 
 ```
-virt-python1 variables
-virt-python2 variables
+serveurweb1 variables
+serveurweb2 variables
 
 [webserver]
-virt-python[1:9]
+serveurweb[1:9]
 
-[jolie-server]
-virt-python2
+[django]
+serveurweb2
 
 ```
 #### Gestion des variables
@@ -281,8 +281,8 @@ contenant des structures en yaml ou json
 
 ```
 host_vars/
-├── virt-python1.yaml
-└── virt-python2.yaml
+├── serveurweb1.yaml
+└── serveurweb2.yaml
 group_vars/
 └── webserver.yaml
 ```
@@ -299,8 +299,8 @@ http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precede
 #### Où trouver des infos
 http://docs.ansible.com/ansible/latest/index.html
 
-* filtres des templates jinja2 ... mais aussi ansible
-* documenations des modules
+* filtres des templates jinja2 ... mais aussi Ansible :
+* documentations des modules : http://docs.ansible.com/ansible/latest/modules_by_category.html
 * Ansible Galaxy
 
 #### Possibilités
