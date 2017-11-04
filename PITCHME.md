@@ -25,7 +25,7 @@
 * Permet de modeliser de scalaires, tableaux et dictionnaires
 ---
 @title[YAML]
-## YAML QÉSACO ?
+## YAML
 
 ```
 ---
