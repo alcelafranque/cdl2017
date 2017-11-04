@@ -1,4 +1,4 @@
-# Pré-requis
+# Pré-requis pour l'atelier
 #### Contrôleur
 
 * Machine debian 8/9 
