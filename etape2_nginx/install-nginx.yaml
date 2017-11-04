@@ -15,5 +15,7 @@
           dest: /etc/nginx/site-avaible/
           
 
-     - name: lien symbolique vers site-enable
-        
+      - name: lien symbolique vers site-enable
+        command: ln -s /etc/nginx/site-avaible/cdl2017.conf /etc/nginx/site-enable/cdl2017.conf  
+        args:
+          creates: /etc/nginx/site-enable/cdl2017.conf
