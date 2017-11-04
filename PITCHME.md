@@ -18,27 +18,27 @@
 * Ajouter le dépot Ansible
 * Copier la clé SSH publique sur la machine gérée 
 ---
+
+
 @title[YAML]
 ## YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
 * Permet de modeliser de scalaires, tableaux et dictionnaires
----
-@title[YAML]
-## YAML QÉSACO ?
-
-```yaml
----
-variable: bar   
-tableau:
-  - foo1
-  - foo2
-  - bar
-dictionnaire:
-  foo1: bar
-  foo2: tabac
+```
+    ---
+    variable: bar   
+    tableau:
+      - foo1
+      - foo2
+      - bar
+    dictionnaire:
+      foo1: bar
+      foo2: tabac
 ```
 ---
+
+
 @title[Hello-wordl-1/3]
 # Hello, World ! 1/3
 Fichier de configuration : ansible.cfg
@@ -56,13 +56,13 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 @title[Hello-wordl-2/3]
 # Hello, World ! 2/3
 ```yaml
-   ---
-       - hosts: virt-python1
+  ---
+    - hosts: virt-python1
       tasks:
-        - name: creation d'un fichier "hello-world.txt"
-          file:
-            path: /home/python1/hello-world.txt
-            state: touch
+      - name: creation d'un fichier "hello-world.txt"
+        file:
+          path: /home/python1/hello-world.txt
+          state: touch
 
 ```
 ---
