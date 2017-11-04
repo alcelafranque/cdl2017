@@ -1,71 +1,62 @@
-# Pré-requis pour l'atelier
+## Pré-requis pour l'atelier
 #### Contrôleur
 
-* Machine debian 8/9 
-* Python récent & python-pip
+* Machine Debian 8/9 
+* Python 2.6/2.7 ou 3.5+
 * Accès SSH en root
 * Avoir une clé SSH
 
-
 #### Machine gérée :
-* Machine debian 8/9 ou Ubuntu ⩾ 14.04
+* Machine Debian 8/9 ou Ubuntu ⩾ 14.04
 * Accés SSH en root
-* Au moins python 2.6 sur la VM \o/
----
-@title[Préparation]
-# Préparation
-* Ajouter le dépot ansible 
-* Copier la clé publique sur la machine gérée 
+* Au moins Python 2.6 sur la VM \o/
 
 ---
-@title[YAML]
-# YAML QÉSACO ?
+## Préparation
+* Ajouter le dépot Ansible puis l'installer (c.f.: http://docs.ansible.com/ansible/latest/intro_installation.html#latest-releases-via-apt-ubuntu)
+* Copier votre clé SSH publique sur la machine gérée 
+
+---
+## YAML QÉSACO ?
 * Equivalent de JSON/XML en moins verbeux.
 * Sensible à l'indentation 
 * Permet de modeliser de scalaires, tableaux et dictionnaires
 ```yaml
-    ---
-    variable: bar   
-    tableau:
-      - foo1
-      - foo2
-      - bar
-    dictionnaire:
-      foo1: bar
-      foo2: tabac
+  ---
+  variable: bar   
+  tableau:
+    - foo1
+    - foo2
+    - bar
+  dictionnaire:
+    foo1: bar
+    foo2: tabac
 ```
-
 ---
-@title[Hello-wordl-1/3]
-# Hello, World ! 1/3
+## Hello, World !
+Fichier de configuration : ansible.cfg
 ```
 [defaults]
-inventory      = ./hosts
+inventory  = ./hosts
 ```
-inventaire hosts
+Fichier d'inventaire : hosts
 ```
 serveurweb1 ansible_host=ipmachine1 ansible_user=root 
 serveurweb2 ansible_host=ipmachine2 ansible_user=root
 ```
+Fichier hello-world.yaml
 
-
----
-@title[Hello-wordl-2/3]
-# Hello, World ! 2/3
 ```yaml
-    ---
-    - hosts: virt-python1
+  ---
+    - hosts: serveurweb1
       tasks:
-        - name: creation d'un fichier "hello-world.txt"
-          file:
-            path: /home/python1/hello-world.txt
-            state: touch
+      - name: creation d'un fichier "hello-world.txt"
+        file:
+          path: /root/hello-world.txt
+          state: touch
+
 ```
-
-
 ---
-@title[Hello-wordl-3/3]
-# hello, world ! 3/3
 
 * exécution:
 
@@ -73,26 +64,27 @@ serveurweb2 ansible_host=ipmachine2 ansible_user=root
 ```
 $ ansible-playbook hello-world.yaml 
 
-PLAY [virt-python1] *************************************************************
+PLAY [serveurweb1] *************************************************************
 
 TASK [Gathering Facts] **********************************************************
-ok: [virt-python1]
+ok: [serveurweb1]
 
 TASK [creation d'un fichier "hello-world.txt"] **********************************
-changed: [virt-python1]
+changed: [serveurweb1]
 
 PLAY RECAP **********************************************************************
-virt-python1                    : ok=2    changed=1    unreachable=0    failed=0   
+serveurweb1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
-
 ---
-@title[playboookactionbase]
-#Un petit playbook pour voir quelques actions de base.
 
+
+## Playbook Nginx
+
+Un petit playbook pour voir quelques actions de base.
 
 ```yaml
 ---
-- hosts: virt-python1
+- hosts: serveurweb1
   tasks:
   - name: installation de django
     pip:
@@ -106,12 +98,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
     args:
       chdir: /home/python1/django-test
       creates: /home/python1/django-test/www/
-```
 
----
-@title[Exemple : Django 2/3]
-
-```
   - name: creer le dossier utilisateur de systemd
     file:
       state: directory
@@ -126,13 +113,6 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
       dest: /home/python1/.config/systemd/user/
     notify: execution du serveur debug de django
 
-```
----
-@title[Exemple : Django 3/3]
-
-# Exemple : Django 3/3
-
-```
   handlers:
   - name: execution du serveur debug de django
     systemd:
@@ -143,11 +123,9 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
       #enabled: true
 
 ```
-
 ---
-@title[ [PIPO] idempotence]
 
-# [PIPO] idempotence
+## [PIPO] idempotence
 
 **il faut que le playbook aie le même comportement qu'il soit joué une ou plusieurs fois**
 
@@ -164,8 +142,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 
 ---
-
-@title[Rôle 1/2]
+## Rôle
 Les rôles permettent de découper un playbook en morceaux réutilisables.
 
 Voici une arborescence basique:
@@ -187,35 +164,29 @@ On découpe les sections du playbook:
 * les fichiers dans le dossier *django/files*,
 * dans *tasks/main.yml*, on le référence par *files/xxx*, ansible résoud le dossier relatif par rapport au chemin du rôle
 
-
-
----
-
-
-@title[Rôle 2/2]
-
 On a un nouveau fichier de playbook django-roles.yaml
 
 ```
 ---
-- hosts: virt-python1
+- hosts: serveurweb1
   roles:
-    - django
+    - nginx
 ```
 ---
+## Templates de fichiers
 
-
-@title[Templates 1/4]
-nsible permet d'utiliser des templates jinja2 à la syntax similaire à celle de django :
+Ansible permet d'utiliser des templates jinja2 :
 
 * Créer un dossier *roles/django/templates* 
 * Copier depuis la cible *django-test/www/settings.py* en tant que *roles/django/templates/settings.py.j2* 
 * Editer ce fichier et remplacer ALLOWED\_HOSTS par :
-```
+
+```yaml
 ALLOWED_HOSTS = ["{{ansible_hostname}}"]
 ```
+
 * Ajouter cette tâche à votre role :
-```
+```yaml
 - name: correction des settings
   template:
     src: templates/settings.py.j2
@@ -224,16 +195,12 @@ ALLOWED_HOSTS = ["{{ansible_hostname}}"]
 ```
 * relancer le playbook, mais cette fois avec l'option *--diff*
 
----
-
-
-@title[Templates 2/4]
-*ansible_hostname* est un fact (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
+*ansible_hostname* est un *fact* (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
 
 On peut afficher la liste des facts en appelant le module *setup* :
 ```
 $ ansible hote -m setup | less
-virt-python1 | SUCCESS => {
+serveurweb1 | SUCCESS => {
     "ansible_facts": {
         "ansible_all_ipv4_addresses": [
             "192.168.y.x",
@@ -243,21 +210,17 @@ virt-python1 | SUCCESS => {
         "ansible_distribution_release": "xenial", 
         "ansible_distribution_version": "16.04", 
         "ansible_env": {
-            "HOME": "/home/python1", 
+            "HOME": "/root", 
             "LANG": "fr_FR.UTF-8", 
-            "PWD": "/home/python1", 
+            "PWD": "/root", 
             "SHELL": "/bin/bash", 
-            "USER": "python1", 
+            "USER": "root", 
         }, 
-        "ansible_hostname": "barbie", 
-		"ansible_user_dir": "/home/python1", 
+        "ansible_hostname": "serveurweb1", 
+		"ansible_user_dir": "/root", 
 [...]
 ```
 Plus puissant, on peut utiliser les facts déjà moissonnés sur les autres clients, ils sont accessibles dans le dictionnaire *hostvars["clientx"]*
----
-
-
-@title[Templates 3/4]
 
 Utilisation :
 
@@ -269,14 +232,12 @@ Utilisation :
             youpi
 {% endif %}
 ```
-* Commentaires: `{# il était un petit navire #}` 
+* Commentaires: `{# il était un petit navire #}`
 
 Ca marche aussi dans les tâches
+
 ---
-
-
-@title[Templates 4/4]
-
+## Templates de playbook
 Dans *roles/django/tasks/main.yml*, mettre des guillemets dans toutes les chaînes qui contiennent *python1*: 
 ```
 virtualenv: "/home/python1/django-test/"
@@ -295,29 +256,23 @@ Pour vérifier que tout fonctionne encore, lancer le playbook avec l'option *--c
 Pour étendre le parc machines sur lequel on applique le playbook, editez-le et remplacez le contenu de *hosts* par *all* puis relancer-le.
 
 ---
-
-
-@title[Inventaire]
-
+## Inventaire
 
 Le fichier *hosts* qui ressemble à un fichier "ini".
-On peut creéer des groupes (une machine peut appartenir à plusieurs groupes).
+On peut créer des groupes (une machine peut appartenir à plusieurs groupes).
 
 ```
-virt-python1 variables
-virt-python2 variables
+serveurweb1 variables
+serveurweb2 variables
 
 [webserver]
-virt-python[1:9]
+serveurweb[1:9]
 
-[jolie-server]
-virt-python2
+[django]
+serveurweb2
 
 ```
----
-
-
-@title[Gestion des variables]
+#### Gestion des variables
 On peut mettre des variables (utilisés dans les templates comme des facts) dans l'inventaire mais c'est limité.
 
 On peut creer deux dossiers *host_vars* et *group_vars*
@@ -326,12 +281,11 @@ contenant des structures en yaml ou json
 
 ```
 host_vars/
-├── virt-python1.yaml
-└── virt-python2.yaml
+├── serveurweb1.yaml
+└── serveurweb2.yaml
 group_vars/
 └── webserver.yaml
 ```
-
 On peut donc stocker des tableaux, dictionnaires...
 
 On peut aussi stocker des variables dans les rôles (valeurs par défaut) 
@@ -339,47 +293,31 @@ On peut aussi stocker des variables dans les rôles (valeurs par défaut)
 On peut surcharger les variables, attention à l'ordre de surcharge :
 
 http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+
 ---
-
-
-@title[Aller plus loin]
-
+## Aller plus loin
+#### Où trouver des infos
 http://docs.ansible.com/ansible/latest/index.html
 
-* structures de contrôle dans les rôles
-* filtres des templates jinja2 ... mais aussi ansible
-* enregistrer le résutlat des tâches dans des variables
-* documenations des modules
+* filtres des templates jinja2 ... mais aussi Ansible :
+* documentations des modules : http://docs.ansible.com/ansible/latest/modules_by_category.html
 * Ansible Galaxy
+
+#### Possibilités
+
+* structures de contrôle dans les rôles
+* enregistrer le résutlat des tâches dans des variables
 * mettre les facts en cache.
 * environnements dans les inventaires
 * inventaires dynamiques (scripts qui listent les machines et leurs variables en json/yaml)
 * création de modules
 
----
-
-@title[The END]
+## The END
 
 Sébastien DA ROCHA
 
 sebastien@da-rocha.net
 
+Alcé LAFRANQUE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+alce@lafranque.net
