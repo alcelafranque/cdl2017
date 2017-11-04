@@ -84,8 +84,9 @@ changed: [virt-python1]
 PLAY RECAP **********************************************************************
 virt-python1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
-
 ---
+
+
 @title[playboookactionbase]
 # Un petit playbook pour voir quelques actions de base.
 
@@ -110,8 +111,9 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 ---
 @title[Exemple : Django 2/3]
+# Exemple : Django 2/3
 
-```
+```yaml
   - name: creer le dossier utilisateur de systemd
     file:
       state: directory
@@ -132,7 +134,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 
 # Exemple : Django 3/3
 
-```
+```yaml
   handlers:
   - name: execution du serveur debug de django
     systemd:
@@ -143,8 +145,9 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
       #enabled: true
 
 ```
-
 ---
+
+
 @title[ [PIPO] idempotence]
 
 # [PIPO] idempotence
@@ -166,6 +169,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 ---
 
 @title[Rôle 1/2]
+# Rôle 1/2
 Les rôles permettent de découper un playbook en morceaux réutilisables.
 
 Voici une arborescence basique:
@@ -186,14 +190,11 @@ On découpe les sections du playbook:
 * les tâches *handlers* dans *django/handlers/main.yml*
 * les fichiers dans le dossier *django/files*,
 * dans *tasks/main.yml*, on le référence par *files/xxx*, ansible résoud le dossier relatif par rapport au chemin du rôle
-
-
-
 ---
 
 
 @title[Rôle 2/2]
-
+# Rôle 2/2
 On a un nouveau fichier de playbook django-roles.yaml
 
 ```
@@ -206,16 +207,17 @@ On a un nouveau fichier de playbook django-roles.yaml
 
 
 @title[Templates 1/4]
-nsible permet d'utiliser des templates jinja2 à la syntax similaire à celle de django :
+# Templates 1/4
+## Ansible permet d'utiliser des templates jinja2 à la syntax similaire à celle de django :
 
 * Créer un dossier *roles/django/templates* 
 * Copier depuis la cible *django-test/www/settings.py* en tant que *roles/django/templates/settings.py.j2* 
 * Editer ce fichier et remplacer ALLOWED\_HOSTS par :
-```
+```yaml
 ALLOWED_HOSTS = ["{{ansible_hostname}}"]
 ```
 * Ajouter cette tâche à votre role :
-```
+```yaml
 - name: correction des settings
   template:
     src: templates/settings.py.j2
@@ -223,12 +225,12 @@ ALLOWED_HOSTS = ["{{ansible_hostname}}"]
   notify: execution du serveur debug de django
 ```
 * relancer le playbook, mais cette fois avec l'option *--diff*
-
 ---
 
 
 @title[Templates 2/4]
-*ansible_hostname* est un fact (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
+# Template 2/4
+## *ansible_hostname* est un fact (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
 
 On peut afficher la liste des facts en appelant le module *setup* :
 ```
@@ -258,6 +260,7 @@ Plus puissant, on peut utiliser les facts déjà moissonnés sur les autres clie
 
 
 @title[Templates 3/4]
+# Templates 3/4
 
 Utilisation :
 
