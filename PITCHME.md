@@ -318,9 +318,8 @@ virt-python2
 
 ```
 ---
-
-
 @title[Gestion des variables]
+# Gestion des variables
 On peut mettre des variables (utilisés dans les templates comme des facts) dans l'inventaire mais c'est limité.
 
 On peut creer deux dossiers *host_vars* et *group_vars*
@@ -342,9 +341,8 @@ On peut aussi stocker des variables dans les rôles (valeurs par défaut)
 On peut surcharger les variables, attention à l'ordre de surcharge :
 
 http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+
 ---
-
-
 @title[Aller plus loin]
 # Aller plus loin
 
@@ -368,25 +366,6 @@ Sébastien DA ROCHA
 
 sebastien@da-rocha.net
 
-Alcé Lafranque
+Alcé LAFRANQUE
 
 alce@lafranque.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
