@@ -26,8 +26,8 @@
 ---
 @title[YAML]
 ## YAML QÉSACO ?
-<br>
-```yaml
+
+```
 ---
 variable: bar   
 tableau:
@@ -38,10 +38,7 @@ dictionnaire:
   foo1: bar
   foo2: tabac
 ```
-
 ---
-
-
 @title[Hello-wordl-1/3]
 # Hello, World ! 1/3
 Fichier de configuration : ansible.cfg
