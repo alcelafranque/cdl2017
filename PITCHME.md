@@ -279,7 +279,7 @@ Ca marche aussi dans les tâches
 
 
 @title[Templates 4/4]
-
+# Templates 4/4
 Dans *roles/django/tasks/main.yml*, mettre des guillemets dans toutes les chaînes qui contiennent *python1*: 
 ```
 virtualenv: "/home/python1/django-test/"
@@ -301,10 +301,10 @@ Pour étendre le parc machines sur lequel on applique le playbook, editez-le et 
 
 
 @title[Inventaire]
-
+# Inventaire
 
 Le fichier *hosts* qui ressemble à un fichier "ini".
-On peut creéer des groupes (une machine peut appartenir à plusieurs groupes).
+On peut créer des groupes (une machine peut appartenir à plusieurs groupes).
 
 ```
 virt-python1 variables
@@ -319,7 +319,7 @@ virt-python2
 ```
 ---
 @title[Gestion des variables]
-# Gestion des variables
+## Gestion des variables (1/2)
 On peut mettre des variables (utilisés dans les templates comme des facts) dans l'inventaire mais c'est limité.
 
 On peut creer deux dossiers *host_vars* et *group_vars*
@@ -333,6 +333,9 @@ host_vars/
 group_vars/
 └── webserver.yaml
 ```
+---
+@title[Gestion des variables]
+## Gestion des variables (2/2)
 
 On peut donc stocker des tableaux, dictionnaires...
 
@@ -344,22 +347,27 @@ http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precede
 
 ---
 @title[Aller plus loin]
-# Aller plus loin
-
+# Aller plus loin 1/2
+## Où trouver des infos
 http://docs.ansible.com/ansible/latest/index.html
 
-* structures de contrôle dans les rôles
 * filtres des templates jinja2 ... mais aussi ansible
-* enregistrer le résutlat des tâches dans des variables
 * documenations des modules
 * Ansible Galaxy
+
+---
+@title[Aller plus loin]
+# Aller plus loin 1/2
+## Possibilités
+
+* structures de contrôle dans les rôles
+* enregistrer le résutlat des tâches dans des variables
 * mettre les facts en cache.
 * environnements dans les inventaires
 * inventaires dynamiques (scripts qui listent les machines et leurs variables en json/yaml)
 * création de modules
 
 ---
-
 @title[The END]
 
 Sébastien DA ROCHA
