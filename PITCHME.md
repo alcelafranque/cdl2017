@@ -90,7 +90,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 Un petit playbook pour voir quelques actions de base.
 
 
-```
+```yaml
 ---
 - hosts: virt-python1
   tasks:
