@@ -11,7 +11,7 @@
 
       - name: copie de la conf nginx
         copy: 
-          src: ./cdl2017
+          src: ./cdl2017.conf
           dest: /etc/nginx/site-avaible/
           
 
