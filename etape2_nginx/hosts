@@ -1,0 +1,2 @@
+serveurweb1 ansible_host=ipmachine1 ansible_user=root 
+serveurweb2 ansible_host=ipmachine2 ansible_user=root

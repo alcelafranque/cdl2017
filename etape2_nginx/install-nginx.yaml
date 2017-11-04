@@ -1,0 +1,19 @@
+---
+    - hosts: all
+      tasks:
+      - name: Installation paquets
+        apt: name=nginx state=present
+
+      - name: supression du vhost par default d'nginx
+        file:
+          path: /etc/nginx/sites-enabled/default
+          state: absent
+
+      - name: copie de la conf nginx
+        copy: 
+          src: ./cdl2017
+          dest: /etc/nginx/site-avaible/
+          
+
+     - name: lien symbolique vers site-enable
+        
