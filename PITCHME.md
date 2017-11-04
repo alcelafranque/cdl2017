@@ -86,7 +86,7 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
 ```
 
 ---
-@title[Exemple : Django 1/3]
+@title[playboookactionbase]
 #Un petit playbook pour voir quelques actions de base.
 
 
@@ -106,11 +106,8 @@ virt-python1                    : ok=2    changed=1    unreachable=0    failed=0
     args:
       chdir: /home/python1/django-test
       creates: /home/python1/django-test/www/
-
-
-
-
 ```
+
 ---
 @title[Exemple : Django 2/3]
 
