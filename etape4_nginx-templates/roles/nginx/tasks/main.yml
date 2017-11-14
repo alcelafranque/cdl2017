@@ -30,8 +30,8 @@
 
 - name: copie fichier d'erreur 404
   copy:
-    src: files/user_not_found.html
-    dest: /var/www/html/
+    src: "files/user_not_found-{{inventory_hostname}}.html"
+    dest: /var/www/html/user_not_found.html
 
 # Creation d'un utilisateur avec page par défaut
 - name: création de l'utilisateur cdl2017
