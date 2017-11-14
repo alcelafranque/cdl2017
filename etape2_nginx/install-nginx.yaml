@@ -1,56 +1,56 @@
 ---
-    - hosts: all
-      tasks:
-      - name: Installation paquets
-        apt:
-          name: nginx
-          state: present
+- hosts: all
+  tasks:
+  - name: Installation paquets
+    apt:
+      name: nginx
+      state: present
 
-      - name: supression du vhost par default de nginx
-        file:
-          path: /etc/nginx/sites-enabled/default
-          state: absent
-        notify: restart nginx
+  - name: supression du vhost par default de nginx
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+    notify: restart nginx
 
-      - name: copie de la conf nginx
-        copy:
-          src: ./cdl2017.conf
-          dest: /etc/nginx/sites-available/
-        notify: restart nginx
+  - name: copie de la conf nginx
+    copy:
+      src: ./cdl2017.conf
+      dest: /etc/nginx/sites-available/
+    notify: restart nginx
 
-      - name: active le site CDL 2017
-        command: ln -s /etc/nginx/sites-available/cdl2017.conf /etc/nginx/sites-enabled/cdl2017.conf
-        # idempotence !
-        args:
-          creates: /etc/nginx/sites-enabled/cdl2017.conf
-        notify: restart nginx
+  - name: active le site CDL 2017
+    command: ln -s /etc/nginx/sites-available/cdl2017.conf /etc/nginx/sites-enabled/cdl2017.conf
+    # idempotence !
+    args:
+      creates: /etc/nginx/sites-enabled/cdl2017.conf
+    notify: restart nginx
 
-      - name: création de l'utilisateur cdl2017
-        user:
-          name: cdl2017
+  - name: création de l'utilisateur cdl2017
+    user:
+      name: cdl2017
 
-      - name: création du dossier public sur l'utilisateur
-        file:
-          path: /home/cdl2017/public
-          state: directory
+  - name: création du dossier public sur l'utilisateur
+    file:
+      path: /home/cdl2017/public
+      state: directory
 
-      - name: copie fichier index
-        copy:
-          src: ./index.html
-          dest: /var/www/html/
+  - name: copie fichier index
+    copy:
+      src: ./index.html
+      dest: /var/www/html/
 
-      - name: copie fichier index utilisateur
-        copy:
-          src: ./my_index.html
-          dest: /home/cdl2017/public/
+  - name: copie fichier index utilisateur
+    copy:
+      src: ./my_index.html
+      dest: /home/cdl2017/public/
 
-      - name: copie fichier d'erreur 404
-        copy:
-          src: ./user_not_found.html
-          dest: /var/www/html/
+  - name: copie fichier d'erreur 404
+    copy:
+      src: ./user_not_found.html
+      dest: /var/www/html/
 
-      handlers:
-        - name: restart nginx
-          systemd:
-            name: nginx
-            state: restarted
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
