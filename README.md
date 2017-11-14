@@ -1,7 +1,7 @@
 ## Pré-requis pour l'atelier
 #### Contrôleur
 
-* Machine Debian 8/9 
+* Machine Debian 8/9 ou Ubuntu ⩾ 14.04 (ou MacOS X si vous savez vous débrouiller ou Windows 10 si vous savez utiliser les VMs Ubuntu intégrées)
 * Python 2.6/2.7 ou 3.5+
 * Accès SSH en root
 * Avoir une clé SSH
@@ -72,6 +72,8 @@ changed: [serveurweb1]
 PLAY RECAP **********************************************************************
 serveurweb1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
+
+Remarque: Si vous ne vous êtes pas encore connecté à la VM, ansible (ssh) vous demandera
 ---
 Vérifications:
 ```shell
