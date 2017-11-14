@@ -56,9 +56,7 @@ Fichier hello-world.yaml
      state: touch
 ```
 ---
-
-* exécution:
-
+Exécution du playbook:
 
 ```
 $ ansible-playbook hello-world.yaml 
@@ -75,7 +73,14 @@ PLAY RECAP *********************************************************************
 serveurweb1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
 ---
+Vérifications:
+```shell
+$ ssh root@ipmachine1
+$ ls -l
+> -rw-r--r-- 1 root root 0 Nov 14 09:50 hello-world.txt
+```
 
+---
 
 ## Playbook Nginx
 
