@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+    - apt:
+        update_cache: yes
+
+    - name: get password of machine
+      local_action: command bash print_password.sh {{inventory_hostname}}
+      register: password
+
+    - name: create user utilisateur2017
+      user:
+        name: utilisateur2017
+        password: "{{password.stdout}}"
+        shell: /bin/bash
+        groups: sudo
+
+

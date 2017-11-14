@@ -1,0 +1,2 @@
+serveurA1 ansible_user=root ansible_host=
+serveurB1 ansible_user=root ansible_host=

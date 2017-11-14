@@ -1,0 +1,7 @@
+#! /bin/bash
+
+password=$(pwgen)
+echo $password
+
+crypted=$(echo $password | mkpasswd -s --method=sha-512)
+echo $crypted
