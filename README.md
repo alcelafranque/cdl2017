@@ -73,7 +73,8 @@ PLAY RECAP *********************************************************************
 serveurweb1                    : ok=2    changed=1    unreachable=0    failed=0   
 ```
 
-Remarque: Si vous ne vous êtes pas encore connecté à la VM, ansible (ssh) vous demandera
+Remarque: Si vous ne vous êtes pas encore connecté à la VM, ansible (ssh) vous demandera de confirmer son authenticité 
+
 ---
 Vérifications:
 ```shell
