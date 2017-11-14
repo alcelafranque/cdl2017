@@ -281,18 +281,34 @@ Ca marche aussi dans les tâches
 
 ---
 ## Templates de playbook
-Dans *roles/django/tasks/main.yml*, mettre des guillemets dans toutes les chaînes qui contiennent *python1*: 
-```
-virtualenv: "/home/python1/django-test/"
-```
-Puis remplacer */home/python1* par `{{ansible_env.PWD}}`
-```
-virtualenv: "{{ansible_env.PWD}}/django-test/"
-```
-Puis remplacer les *python1* restant par `{{ansible_user_id}}`
+On va faire en sorte que le message d'erreur aparaisse en français sur la première machine gérée et en anglais sur la seconde.
 
+On renomme le fichier files/user_not_found.html en files/user_not_found-serverweb1.html.
 
-On vient de rendre le rôle insenssible au nom de l'utilisateur.
+Puis on copie ce fichier en tant que files/user_not_found-serverweb2.html et on le traduit en  anglais.
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unknown User</title>
+    </head>
+    <body>
+
+        <h1>Errior</h1>
+        <p>Oh, this user doesn't exists...</p>
+
+    </body>
+</html>
+```
+On a désormais deux fichiers. Pour déployer le bon fichier sur chaque machine, il faut corriger les *tasks*, en rajoutant *-{{inventory_hostname}}* dans le nom du fichier source :
+
+```yaml
+- name: copie fichier d'erreur 404
+  copy:
+    src: "files/user_not_found-{{inventory_hostname}}.html"
+    dest: /var/www/html/user_not_found.html
+```
 
 Pour vérifier que tout fonctionne encore, lancer le playbook avec l'option *--check*
 
