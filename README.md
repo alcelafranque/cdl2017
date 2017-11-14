@@ -91,44 +91,61 @@ Un petit playbook pour voir quelques actions de base.
 
 ```yaml
 ---
-- hosts: serveurweb1
+- hosts: all
   tasks:
-  - name: installation de django
-    pip:
-      name: django
-      virtualenv: /home/python1/django-test/
-      virtualenv_python: python3.6
+  - name: Installation paquets
+    apt:
+      name: nginx
+      state: present
 
-  - name: creation app django
-    command: /home/python1/django-test/bin/django-admin startproject www .
+  - name: supression du vhost par default de nginx
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+    notify: restart nginx
+
+  - name: copie de la conf nginx
+    copy:
+      src: ./cdl2017.conf
+      dest: /etc/nginx/sites-available/
+    notify: restart nginx
+
+  - name: active le site CDL 2017
+    command: ln -s /etc/nginx/sites-available/cdl2017.conf /etc/nginx/sites-enabled/cdl2017.conf
     # idempotence !
     args:
-      chdir: /home/python1/django-test
-      creates: /home/python1/django-test/www/
+      creates: /etc/nginx/sites-enabled/cdl2017.conf
+    notify: restart nginx
 
-  - name: creer le dossier utilisateur de systemd
+  - name: création de l'utilisateur cdl2017
+    user:
+      name: cdl2017
+
+  - name: création du dossier public sur l'utilisateur
     file:
+      path: /home/cdl2017/public
       state: directory
-      dest: /home/python1/.config/systemd/user/
-      recurse: yes
-      owner: python1
-      group: python1
 
-  - name: installation du service systemd
+  - name: copie fichier index
     copy:
-      src: django-python1.service
-      dest: /home/python1/.config/systemd/user/
-    notify: execution du serveur debug de django
+      src: ./index.html
+      dest: /var/www/html/
+
+  - name: copie fichier index utilisateur
+    copy:
+      src: ./my_index.html
+      dest: /home/cdl2017/public/
+
+  - name: copie fichier d'erreur 404
+    copy:
+      src: ./user_not_found.html
+      dest: /var/www/html/
 
   handlers:
-  - name: execution du serveur debug de django
-    systemd:
-      name: django-python1.service
-      state: restarted
-      user: yes
-      daemon_reload: yes
-      #enabled: true
-
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
 ```
 ---
 
@@ -175,7 +192,7 @@ On découpe les sections du playbook:
 
 * les tâches *tasks* dans *nginx/tasks/main.yml*
 * les tâches *handlers* dans *nginx/handlers/main.yml*
-* les fichiers dans le dossier *nginx/files*,
+* les fichiers dans le dossier *nginx/files/*,
 * dans *tasks/main.yml*, on le référence par *files/xxx*, ansible résoud le dossier relatif par rapport au chemin du rôle
 
 On a un nouveau fichier de playbook nginx-roles.yaml
@@ -192,46 +209,58 @@ On a un nouveau fichier de playbook nginx-roles.yaml
 Ansible permet d'utiliser des templates jinja2 :
 
 * Créer un dossier *roles/nginx/templates* 
-* Copier depuis la cible *nginx-test/www/settings.py* en tant que *roles/nginx/templates/settings.py.j2* 
-* Editer ce fichier et remplacer ALLOWED\_HOSTS par :
+* Déplacer le fichier *roles/nginx/files/index.html* en tant que *roles/nginx/templates/index.html.j2* 
+* Editer ce fichier et remplacer le titre par :
 
-```yaml
-ALLOWED_HOSTS = ["{{ansible_hostname}}"]
+```html
+<h1>Bienvenue sur la machine {{ansible_hostname}}!</h1>
 ```
 
-* Ajouter cette tâche à votre role :
+* modifier la tâche de votre role (c'était une tâche *copy*):
 ```yaml
-- name: correction des settings
+- name: copie fichier index
   template:
-    src: templates/settings.py.j2
-    dest: /home/python1/django-test/www/settings.py
-  notify: execution du serveur debug de django
+    src: templates/index.html.j2
+    dest: /var/www/html/index.html
 ```
 * relancer le playbook, mais cette fois avec l'option *--diff*
 
 *ansible_hostname* est un *fact* (variable créer dynamiquement) récupéré lors de la tâche *Gathering Facts*.
 
-On peut afficher la liste des facts en appelant le module *setup* :
+On peut afficher la liste des *facts* en appelant le module *setup* :
 ```
-$ ansible hote -m setup | less
+$ ansible serveurweb1 -m setup | less
 serveurweb1 | SUCCESS => {
     "ansible_facts": {
         "ansible_all_ipv4_addresses": [
             "192.168.y.x",
         ],
-        "ansible_distribution": "Ubuntu", 
-        "ansible_distribution_major_version": "16", 
-        "ansible_distribution_release": "xenial", 
-        "ansible_distribution_version": "16.04", 
+[...]
+        "ansible_architecture": "x86_64", 
+        "ansible_bios_date": "04/01/2014", 
+        "ansible_bios_version": "Ubuntu-1.8.2-1ubuntu1", 
+[...]
+        "ansible_distribution": "Debian", 
+        "ansible_distribution_file_parsed": true, 
+        "ansible_distribution_file_path": "/etc/os-release", 
+        "ansible_distribution_file_variety": "Debian", 
+        "ansible_distribution_major_version": "9", 
+        "ansible_distribution_release": "stretch", 
+        "ansible_distribution_version": "9.0", 
+[...]
         "ansible_env": {
             "HOME": "/root", 
-            "LANG": "fr_FR.UTF-8", 
+            "LANG": "en_US.UTF-8", 
+            "LANGUAGE": "en_US.UTF-8", 
+            "LC_ALL": "en_US.UTF-8", 
+            "LOGNAME": "root", 
+            "MAIL": "/var/mail/root", 
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", 
             "PWD": "/root", 
-            "SHELL": "/bin/bash", 
-            "USER": "root", 
-        }, 
-        "ansible_hostname": "serveurweb1", 
-		"ansible_user_dir": "/root", 
+[...]
+        "ansible_form_factor": "Other", 
+        "ansible_fqdn": "scw-33443c", 
+        "ansible_hostname": "scw-33443c", 
 [...]
 ```
 Plus puissant, on peut utiliser les facts déjà moissonnés sur les autres clients, ils sont accessibles dans le dictionnaire *hostvars["clientx"]*
@@ -242,7 +271,7 @@ Utilisation :
 * filtre sur la variable: `{{variable|upper}}`
 * structures de controle : 
 ```
-{% if ansible_distribution_version == "xenial" %}
+{% if ansible_distribution_version == "stretch" %}
             youpi
 {% endif %}
 ```
