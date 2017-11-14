@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: serveurweb1
   tasks:
   - name: Installation paquets
     apt:

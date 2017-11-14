@@ -1,5 +1,5 @@
 ---
-    - hosts: all
+    - hosts: serveurweb1
       tasks:
       - name: creation d'un fichier "hello-word.txt"
         file: 
