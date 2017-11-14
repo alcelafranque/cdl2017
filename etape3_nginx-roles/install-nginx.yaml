@@ -1,6 +1,0 @@
----
-    - hosts: all
-      tasks:
-      - name: Installation paquets
-        apt: name=nginx state=present
-
