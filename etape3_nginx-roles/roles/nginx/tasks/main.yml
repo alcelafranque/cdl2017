@@ -23,6 +23,16 @@
     creates: /etc/nginx/sites-enabled/cdl2017.conf
   notify: restart nginx
 
+- name: copie fichier index
+  copy:
+    src: files/index.html
+    dest: /var/www/html/
+
+- name: copie fichier d'erreur 404
+  copy:
+    src: files/user_not_found.html
+    dest: /var/www/html/
+
 - name: création de l'utilisateur cdl2017
   user:
     name: cdl2017
@@ -32,17 +42,7 @@
     path: /home/cdl2017/public
     state: directory
 
-- name: copie fichier index
-  copy:
-    src: files/index.html
-    dest: /var/www/html/
-
 - name: copie fichier index utilisateur
   copy:
     src: files/my_index.html
     dest: /home/cdl2017/public/
-
-- name: copie fichier d'erreur 404
-  copy:
-    src: files/user_not_found.html
-    dest: /var/www/html/
