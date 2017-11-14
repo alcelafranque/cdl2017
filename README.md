@@ -157,23 +157,28 @@ Les rôles permettent de découper un playbook en morceaux réutilisables.
 Voici une arborescence basique:
 
 ```
-roles/
-└── django
+roles
+└── nginx
     ├── files
-    │   └── django-python1.service
+    │   ├── cdl2017.conf
+    │   ├── index.html
+    │   ├── my_index.html
+    │   └── user_not_found.html
     ├── handlers
-    │   └── main.yml
+    │   └── main.yml
     └── tasks
         └── main.yml
+
+
 ```
 On découpe les sections du playbook:
 
-* les tâches *tasks* dans *django/tasks/main.yml*
-* les tâches *handlers* dans *django/handlers/main.yml*
-* les fichiers dans le dossier *django/files*,
+* les tâches *tasks* dans *nginx/tasks/main.yml*
+* les tâches *handlers* dans *nginx/handlers/main.yml*
+* les fichiers dans le dossier *nginx/files*,
 * dans *tasks/main.yml*, on le référence par *files/xxx*, ansible résoud le dossier relatif par rapport au chemin du rôle
 
-On a un nouveau fichier de playbook django-roles.yaml
+On a un nouveau fichier de playbook nginx-roles.yaml
 
 ```
 ---
@@ -186,8 +191,8 @@ On a un nouveau fichier de playbook django-roles.yaml
 
 Ansible permet d'utiliser des templates jinja2 :
 
-* Créer un dossier *roles/django/templates* 
-* Copier depuis la cible *django-test/www/settings.py* en tant que *roles/django/templates/settings.py.j2* 
+* Créer un dossier *roles/nginx/templates* 
+* Copier depuis la cible *nginx-test/www/settings.py* en tant que *roles/nginx/templates/settings.py.j2* 
 * Editer ce fichier et remplacer ALLOWED\_HOSTS par :
 
 ```yaml
